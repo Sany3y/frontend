@@ -62,9 +62,6 @@ export function Footer() {
                     <Link href="/contact">تواصل معنا</Link>
                   </li>
                   <li>
-                    <Link href="/team">فريق العمل</Link>
-                  </li>
-                  <li>
                     <Link href="/policy">سياسة الخصوصية</Link>
                   </li>
                 </ul>
@@ -126,9 +123,6 @@ export function Footer() {
                   </li>
                   <li>
                     <Link href="/contact">تواصل</Link>
-                  </li>
-                  <li>
-                    <Link href="/team">فريق العمل</Link>
                   </li>
                 </ul>
               </div>
