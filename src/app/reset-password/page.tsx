@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { toast } from "sonner";
@@ -8,13 +8,19 @@ import { toast } from "sonner";
 function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialEmail = searchParams.get("email") || "";
-  const token = searchParams.get("token") || "";
+  const [initialEmail] = useState(() => searchParams.get("email") || "");
+  const [token] = useState(() => searchParams.get("token") || "");
 
   const [email, setEmail] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (window.location.search) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -63,7 +63,22 @@ export default function CustomerDashboardPage() {
         }
       );
       if (res.url) {
-        window.location.href = res.url;
+        let parsedUrl: URL | null = null;
+        try {
+          parsedUrl = new URL(res.url, window.location.origin);
+        } catch {
+          parsedUrl = null;
+        }
+        const isSafeRedirect =
+          parsedUrl &&
+          (parsedUrl.protocol === "https:" ||
+            parsedUrl.origin === window.location.origin);
+        if (!isSafeRedirect || !parsedUrl) {
+          toast.error("رابط الدفع المستلم غير صالح.");
+          setPayingTaskId(null);
+          return;
+        }
+        window.location.href = parsedUrl.toString();
       } else {
         toast.error("لم يتم استلام رابط الدفع من الخادم.");
         setPayingTaskId(null);
@@ -201,7 +216,7 @@ export default function CustomerDashboardPage() {
                 </div>
                 <div className="card-body">
                   {dashboard.upcomingAppointments &&
-                  dashboard.upcomingAppointments.length > 0 ? (
+                    dashboard.upcomingAppointments.length > 0 ? (
                     <ul className="list-group list-group-flush">
                       {dashboard.upcomingAppointments.map((task) => {
                         const badge = getStatusBadge(task.status);
@@ -285,7 +300,7 @@ export default function CustomerDashboardPage() {
                 </div>
                 <div className="card-body">
                   {dashboard.pastBookings &&
-                  dashboard.pastBookings.length > 0 ? (
+                    dashboard.pastBookings.length > 0 ? (
                     <ul className="list-group list-group-flush">
                       {dashboard.pastBookings.map((task) => {
                         const badge = getStatusBadge(task.status);

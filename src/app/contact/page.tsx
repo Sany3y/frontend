@@ -15,16 +15,15 @@ export default function ContactPage() {
     setSending(true);
     try {
       await emailjs.sendForm(
-        "service_d2c1803",
-        "template_wb0w6hs",
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_d2c1803",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_wb0w6hs",
         formRef.current,
-        "zTpbCZJ_l6s8POpKC"
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "zTpbCZJ_l6s8POpKC"
       );
       toast.success("تم إرسال الرسالة بنجاح!");
       formRef.current.reset();
     } catch {
-      toast.success("تم استلام رسالتك بنجاح! سنتواصل معك قريباً.");
-      formRef.current.reset();
+      toast.error("حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.");
     } finally {
       setSending(false);
     }

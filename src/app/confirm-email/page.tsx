@@ -7,13 +7,17 @@ import { apiFetch } from "@/lib/api";
 
 function ConfirmEmailContent() {
   const searchParams = useSearchParams();
-  const userId = searchParams.get("userId") || "";
-  const token = searchParams.get("token") || "";
+  const [userId] = useState(() => searchParams.get("userId") || "");
+  const [token] = useState(() => searchParams.get("token") || "");
 
   const [state, setState] = useState<"loading" | "Success" | "Failed">("loading");
   const [message, setMessage] = useState("جاري تأكيد البريد الإلكتروني...");
 
   useEffect(() => {
+    if (window.location.search) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
     if (!userId || !token) {
       setState("Failed");
       setMessage("رابط تأكيد البريد الإلكتروني غير مكتمل.");
@@ -35,7 +39,7 @@ function ConfirmEmailContent() {
         setState("Failed");
         setMessage(
           err.message ||
-            "فشل تأكيد البريد الإلكتروني. قد يكون الرابط غير صالح أو منتهي الصلاحية."
+          "فشل تأكيد البريد الإلكتروني. قد يكون الرابط غير صالح أو منتهي الصلاحية."
         );
       });
   }, [userId, token]);

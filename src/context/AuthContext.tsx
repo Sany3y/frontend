@@ -28,10 +28,18 @@ const AuthContext = createContext<AuthContextType>({
   isTechnician: false,
   isClient: false,
   isShop: false,
-  setSession: () => {},
-  updateUser: () => {},
-  logout: async () => {},
+  setSession: () => { },
+  updateUser: () => { },
+  logout: async () => { },
 });
+
+function writeTokenCookie(value: string, maxAgeSeconds: number) {
+  const secureFlag =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+      ? "; Secure"
+      : "";
+  document.cookie = `sany3y_token=${value}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax${secureFlag}`;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -60,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(newUser);
     localStorage.setItem("sany3y_token", newToken);
     localStorage.setItem("sany3y_user", JSON.stringify(newUser));
-    document.cookie = `sany3y_token=${newToken}; path=/; max-age=86400; SameSite=Lax`;
+    writeTokenCookie(newToken, 86400);
   };
 
   const updateUser = (updatedUser: AuthUser) => {
@@ -80,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     localStorage.removeItem("sany3y_token");
     localStorage.removeItem("sany3y_user");
-    document.cookie = "sany3y_token=; path=/; max-age=0";
+    writeTokenCookie("", 0);
     router.push("/");
   };
 
